@@ -1,0 +1,5 @@
+if(EXISTS "/home/bian/bustub_initial/bustub_initial/build-clang/test/recovery_test[1]_tests.cmake")
+  include("/home/bian/bustub_initial/bustub_initial/build-clang/test/recovery_test[1]_tests.cmake")
+else()
+  add_test(recovery_test_NOT_BUILT recovery_test_NOT_BUILT)
+endif()

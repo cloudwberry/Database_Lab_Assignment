@@ -1,0 +1,5 @@
+if(EXISTS "/home/bian/bustub_initial/bustub_initial/build-clang/test/lock_manager_isolation_test[1]_tests.cmake")
+  include("/home/bian/bustub_initial/bustub_initial/build-clang/test/lock_manager_isolation_test[1]_tests.cmake")
+else()
+  add_test(lock_manager_isolation_test_NOT_BUILT lock_manager_isolation_test_NOT_BUILT)
+endif()

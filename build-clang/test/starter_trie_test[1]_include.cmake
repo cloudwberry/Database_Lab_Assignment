@@ -1,0 +1,5 @@
+if(EXISTS "/home/bian/bustub_initial/bustub_initial/build-clang/test/starter_trie_test[1]_tests.cmake")
+  include("/home/bian/bustub_initial/bustub_initial/build-clang/test/starter_trie_test[1]_tests.cmake")
+else()
+  add_test(starter_trie_test_NOT_BUILT starter_trie_test_NOT_BUILT)
+endif()
