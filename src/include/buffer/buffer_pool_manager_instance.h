@@ -176,6 +176,16 @@ class BufferPoolManagerInstance : public BufferPoolManager {
     // This is a no-nop right now without a more complex data structure to track deallocated pages
   }
 
-  // TODO(student): You may add additional private members and helper functions
+  /**
+   * @brief Get a frame to host a new page, preferring the free list and falling back to the replacer.
+   * Caller should acquire the latch before calling this function.
+   */
+  auto GetReplacementFrame(frame_id_t *frame_id) -> bool;
+
+  /**
+   * @brief Evict the page currently occupying a frame (if any) and reset the frame's metadata.
+   * Caller should acquire the latch before calling this function.
+   */
+  void EvictAndResetFrame(frame_id_t frame_id);
 };
 }  // namespace bustub
