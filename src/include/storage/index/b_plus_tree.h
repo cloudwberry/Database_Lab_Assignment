@@ -10,10 +10,13 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 
+#include <fstream>
 #include <queue>
 #include <string>
+#include <utility>
 #include <vector>
 
+#include "common/rwlatch.h"
 #include "concurrency/transaction.h"
 #include "storage/index/index_iterator.h"
 #include "storage/page/b_plus_tree_internal_page.h"
@@ -22,6 +25,8 @@
 namespace bustub {
 
 #define BPLUSTREE_TYPE BPlusTree<KeyType, ValueType, KeyComparator>
+
+enum class Operation { READ, INSERT, DELETE };
 
 /**
  * Main class providing the API for the Interactive B+ Tree.
@@ -77,6 +82,26 @@ class BPlusTree {
  private:
   void UpdateRootPageId(int insert_record = 0);
 
+  auto FindLeafPage(const KeyType &key, bool left_most, Transaction *transaction, Operation op) -> LeafPage *;
+  auto GetLatchedPage(Transaction *transaction, page_id_t page_id) -> Page *;
+
+  auto Split(LeafPage *leaf) -> LeafPage *;
+  auto Split(InternalPage *node) -> std::pair<InternalPage *, KeyType>;
+  void InsertIntoLeaf(LeafPage *leaf, const KeyType &key, const ValueType &value);
+  void InsertIntoInternal(InternalPage *parent, int index, const KeyType &key, const BPlusTreePage *new_node);
+  void InsertIntoParent(BPlusTreePage *old_node, const KeyType &key, BPlusTreePage *new_node, Transaction *transaction);
+
+  void RemoveFromLeaf(LeafPage *leaf, int index);
+  void CoalesceOrRedistribute(BPlusTreePage *node, Transaction *transaction);
+  void AdjustRoot(BPlusTreePage *node, Transaction *transaction);
+  void RemoveFromParent(InternalPage *parent, int index);
+  void UpdateChildParent(page_id_t child_id, page_id_t parent_id);
+  void ReleasePageAndDelete(Transaction *transaction, Page *page);
+
+  auto IsSafe(const BPlusTreePage *node, Operation op) const -> bool;
+  void ReleaseAncestors(Transaction *transaction, Operation op);
+  void ReleaseLatchFromQueue(Transaction *transaction, Operation op);
+
   /* Debug Routines for FREE!! */
   void ToGraph(BPlusTreePage *page, BufferPoolManager *bpm, std::ofstream &out) const;
 
@@ -89,6 +114,7 @@ class BPlusTree {
   KeyComparator comparator_;
   int leaf_max_size_;
   int internal_max_size_;
+  ReaderWriterLatch root_latch_;
 };
 
 }  // namespace bustub

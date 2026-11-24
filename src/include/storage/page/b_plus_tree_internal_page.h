@@ -41,6 +41,11 @@ class BPlusTreeInternalPage : public BPlusTreePage {
   auto KeyAt(int index) const -> KeyType;
   void SetKeyAt(int index, const KeyType &key);
   auto ValueAt(int index) const -> ValueType;
+  void SetValueAt(int index, const ValueType &value);
+  auto ValueIndex(const ValueType &value) const -> int;
+  auto Lookup(const KeyType &key, const KeyComparator &comparator) const -> ValueType;
+  auto GetItem(int index) -> MappingType &;
+  auto GetItem(int index) const -> const MappingType &;
 
  private:
   // Flexible array member for page data.

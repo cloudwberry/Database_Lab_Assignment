@@ -243,3 +243,11 @@ docs/dev
 
 # Submission zip files
 *.zip
+
+# Local build directory
+/build-clang/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
